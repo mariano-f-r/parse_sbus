@@ -39,7 +39,7 @@ impl SbusPacket {
     /// use parse_sbus::{SbusPacket, ErrorKind};
     ///
     /// let data = [
-    ///    0x0F, 128, 48, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0,
+    ///    0xF0, 128, 48, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0,
     /// ];
     ///
     /// let mut throttle = 50;
@@ -63,7 +63,7 @@ impl SbusPacket {
     /// ```
     pub fn try_from_bytes(bytes: &[u8; 25]) -> Result<SbusPacket, ParsingError> {
         // Checks to see if the first byte is the SBUS start packet byte
-        if bytes[0] != 0x0F {
+        if bytes[0] != 0xF0 {
             return Err(ParsingError::new(ErrorKind::NotSbus));
         }
         // The 24th byte contains the following bits: [0 0 0 0 failsafe frame_lost ch18 ch17]
@@ -154,7 +154,7 @@ mod tests {
     #[test]
     fn analog() {
         let data = [
-            0x0F, 128, 48, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0,
+            0xF0, 128, 48, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0,
         ];
         let parsed = SbusPacket::try_from_bytes(&data).unwrap();
         let correct_analog: [u16; 16] = [1025, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1024];
